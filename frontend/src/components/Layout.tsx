@@ -1,10 +1,12 @@
+import cn from 'classnames'
 interface LayoutProps {
   children: React.ReactNode;
+  className?: string
 }
-export const Layout = ({ children }: LayoutProps) => {
+export const Layout = ({ children, className }: LayoutProps) => {
   return (
     <>
-      <div className="max-w-325 bg-red mx-auto">{children}</div>
+      <div className={cn("max-w-325 bg-red mx-auto", className)}>{children}</div>
     </>
   );
 };

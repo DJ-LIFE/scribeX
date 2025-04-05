@@ -1,8 +1,34 @@
 import { Bell, Search, SquarePen } from "lucide-react";
+import { useContext } from "react";
 import { useNavigate } from "react-router";
+import { Button } from "./ui/Button";
+import { AppContext } from "@/context/AppContext";
 
 const Header = () => {
+  const {isSigned} = useContext(AppContext);
   const navigate = useNavigate();
+  if(!isSigned) {
+    return (
+      <header className="border-b border-black/10 shadow ">
+      <div className="max-w-325 p-2 flex justify-between mx-auto">
+        <div className="flex gap-4 items-center">
+          <a href="/" className="text-2xl font-serif font-semibold">
+            ScribeX
+          </a>
+        </div>
+        <div className="flex gap-6 items-center">
+           <Button>Get started</Button>
+          <div>
+            <Bell className="cursor-pointer" />
+          </div>
+          <div className="rounded-full bg-green-200 w-10 h-10 flex items-center justify-center cursor-pointer">
+            A
+          </div>
+        </div>
+      </div>
+    </header>
+    )
+  }
   return (
     <header className="border-b border-black/10 shadow ">
       <div className="max-w-420 p-2 flex justify-between mx-auto">

@@ -8,7 +8,7 @@ interface Data {
   user: string
 }
 export const LandingPage = () => {
-  const [data, setData] = useState<Data[]>()
+  const [data, setData] = useState<Data[]>([])
   const fetchData = async () => {
     const res = await fetch('https://backend.hidden-snow-9313.workers.dev/api/v1/blog/bulk', {
       headers: {
@@ -16,13 +16,14 @@ export const LandingPage = () => {
       }
     });
     const data = await res.json();
+    console.log("Api Response", data);
     return data;
   }
   useEffect(() => {
     const fetchDataAndUpdateState = async () => {
       try {
         const response = await fetchData();
-        setData(response);
+        setData(response.blogs);
       } catch (error) {
         console.log("Error while fetching the data", error);
       }
@@ -34,8 +35,8 @@ export const LandingPage = () => {
     <div>
       <Header />
       <Layout>
-        <div className="mt-20">
-          {data?.map((data, id) => (
+        <div className="mt-20 mx-4">
+          {data.map((data, id) => (
             <div key={id} className="border rounded-md shadow flex flex-col p-2 my-2">
               <div className="flex items-center gap-2 text-sm">
                 <span className="flex items-center justify-center rounded-full bg-blue-300 px-2">
