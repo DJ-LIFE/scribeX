@@ -1,6 +1,8 @@
 import { Bell, Ellipsis} from "lucide-react";
-
-const StoryHeader = () => {
+interface StoryHeaderProps {
+  onPublish: () => void;
+}
+const StoryHeader = ({onPublish}: StoryHeaderProps) => {
   return (
     <header className="border-b border-black/10 shadow">
       <div className="max-w-420 p-2 flex justify-between mx-auto">
@@ -11,7 +13,7 @@ const StoryHeader = () => {
           <div className="text-sm font-semibold">Draft</div>
         </div>
         <div className="flex gap-6 items-center">
-          <button className="rounded-full px-4 text-sm cursor-pointer bg-green-800 py-1">
+          <button className="rounded-full px-4 text-sm cursor-pointer bg-green-800 py-1" onClick={onPublish}>
             <span className="text-white">publish</span>
           </button>
           <div className="rounded-full px-2 cursor-pointer">

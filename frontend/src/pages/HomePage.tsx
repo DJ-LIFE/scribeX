@@ -1,14 +1,22 @@
 // import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { Layout } from "../components/Layout";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import AuthForm from "./AuthForm";
 import { X } from "lucide-react";
+import { AppContext } from "@/context/AppContext";
 
 const HomePage = () => {
+  const {isSigned} = useContext(AppContext);
     const [popup, setPopup] = useState(false);
     // const navigate = useNavigate()
+    useEffect(() => {
+      if(isSigned === true) {
+        setPopup(false);
+      }
+    }, [])
+    console.log(isSigned, "isSigned");
   return (
     <div>
       <Header />

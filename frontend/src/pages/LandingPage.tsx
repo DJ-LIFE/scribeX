@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { Layout } from "../components/Layout";
+import axios from "axios";
 
 interface Data {
   title: string,
@@ -8,14 +9,20 @@ interface Data {
   user: string
 }
 export const LandingPage = () => {
-  const [data, setData] = useState<Data[]>([])
+  const [data, setData] = useState<Data[]>([]);
+  const token = localStorage.getItem('token');
   const fetchData = async () => {
-    const res = await fetch('https://backend.hidden-snow-9313.workers.dev/api/v1/blog/bulk', {
+    // const res = await fetch('https://backend.hidden-snow-9313.workers.dev/api/v1/blog/bulk', {
+    //   headers: {
+    //     Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg3ZWVlMGI5LTQwZmItNGE1YS05YjU4LWNhNTZmMmY5Yzc3OSJ9.-I-GjyOcY2jVLQBgPwwPWSBgR7tceMZortMTTQ1kDsE"
+    //   }
+    // });
+    const res = await axios.get('https://backend.hidden-snow-9313.workers.dev/api/v1/blog/bulk', {
       headers: {
-        Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg3ZWVlMGI5LTQwZmItNGE1YS05YjU4LWNhNTZmMmY5Yzc3OSJ9.-I-GjyOcY2jVLQBgPwwPWSBgR7tceMZortMTTQ1kDsE"
+        Authorization: token
       }
-    });
-    const data = await res.json();
+    })
+    const data = res.data;
     console.log("Api Response", data);
     return data;
   }

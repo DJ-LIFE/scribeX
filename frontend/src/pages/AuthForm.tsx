@@ -19,11 +19,13 @@ import { Input } from "@/components/ui/input";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AppContext } from "@/context/AppContext";
-import {toast} from 'sonner'
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const AuthForm = () => {
   const [signInType, setSignInType] = useState(true);
-  const {setIsSigned} = useContext(AppContext);
+  const {isSigned, setIsSigned } = useContext(AppContext);
+  const navigate = useNavigate();
 
   const signup = useForm<SignupType>({
     resolver: zodResolver(signupInput),
@@ -45,29 +47,29 @@ const AuthForm = () => {
   const signInApi = async () => {
     try {
       const payload = signin.getValues();
-    console.log(payload, "SigniN Payload");
-    const res = await axios.post(
-      "https://backend.hidden-snow-9313.workers.dev/api/v1/user/signin",
-      payload
-    );
-    console.log(res);
-    const { token } = res.data;
+      console.log(payload, "SigniN Payload");
+      const res = await axios.post(
+        "https://backend.hidden-snow-9313.workers.dev/api/v1/user/signin",
+        payload
+      );
+      console.log(res);
+      const token = res.data;
 
-    localStorage.setItem("token", token);
-    console.log(token);
-    setIsSigned(true);
+      localStorage.setItem("token", token);
+      setIsSigned(true);
 
-    toast("You are Successfully signed in!", {
-      description: 'Welcome Back!',
-      action: {
-        label: "close",
-        onClick: () => console.log("Toast Closed")
-      }
-    })
+      toast("You are Successfully signed in!", {
+        description: "Welcome Back!",
+        action: {
+          label: "close",
+          onClick: () => console.log("Toast Closed"),
+        },
+      });
+
+      navigate("/");
     } catch (error) {
-      console.log("Sign in Error", error)
+      console.log("Sign in Error", error);
     }
-    
   };
 
   const onSubmit = (values: SignupType | SigninType) => {
