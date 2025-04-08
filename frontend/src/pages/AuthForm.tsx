@@ -4,7 +4,7 @@ import {
   SigninType,
   signupInput,
   SignupType,
-} from "../../../common/src/index";
+} from "@jarvis22719/common-app";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/Button";
 import {
@@ -21,10 +21,12 @@ import axios from "axios";
 import { AppContext } from "@/context/AppContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { Loader } from "@/components/Loader";
 
 const AuthForm = () => {
   const [signInType, setSignInType] = useState(true);
-  const {isSigned, setIsSigned } = useContext(AppContext);
+  const { isSigned, setIsSigned } = useContext(AppContext);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const signup = useForm<SignupType>({
@@ -73,12 +75,17 @@ const AuthForm = () => {
   };
 
   const onSubmit = (values: SignupType | SigninType) => {
+    setIsLoading(true);
+
     if (signInType) {
       console.log("Sign In:", values);
       signInApi();
     } else {
       console.log("Sign Up:", values);
     }
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
   };
 
   const renderFormFields = () => {
@@ -97,8 +104,8 @@ const AuthForm = () => {
     return fields.map((field) => (
       <FormField
         key={field.name}
-        control={form.control}
-        name={field.name as keyof (SignupType | SigninType)} // Explicitly type the name
+        control={signInType ? signin.control : signup.control} // Ensure correct form control is used
+        name={field.name as keyof (SignupType | SigninType)}
         render={({ field: inputField }) => (
           <FormItem>
             <FormLabel>{field.label}</FormLabel>
@@ -126,10 +133,17 @@ const AuthForm = () => {
           <span
             className="font-semibold"
             onClick={() => setSignInType(!signInType)}
+            onKeyDown={((e) => {
+              if (e.key === "Enter") {
+                setSignInType(!signInType);
+              }
+            }) as React.KeyboardEventHandler<HTMLSpanElement>}
+             
           >
             {signInType ? "Signup Here" : "Signin Here"}
           </span>
         </div>
+        <div className="flex justify-center text-sm font-semibold">{isLoading && <Loader content="Signing in..." />}</div>
       </form>
     </Form>
   );
