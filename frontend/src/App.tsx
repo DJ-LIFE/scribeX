@@ -6,6 +6,7 @@ import { useContext } from "react";
 import AuthPage from "./pages/AuthForm";
 import { AppContext } from "./context/AppContext";
 import { Toaster } from "sonner";
+import { UpdateStory } from "./pages/UpdateStory";
 function App() {
   const {isSigned} = useContext(AppContext);
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={isSigned ? <LandingPage/> : <HomePage />} />
           <Route path="/new-story" element={<NewStory />} />
           <Route path='/login' element={<AuthPage />} />
+          <Route path="/update" element={<UpdateStory />} />
         </Routes>
       </BrowserRouter>
     </>

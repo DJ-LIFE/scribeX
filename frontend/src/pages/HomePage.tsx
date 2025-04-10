@@ -20,12 +20,13 @@ const HomePage = () => {
   return (
     <div>
       <Header />
-      <Layout className="space-y-10 py-40 font-serif flex flex-col items-start px-4">
+      <Layout className="space-y-10 py-40 font-serif flex flex-col items-start px-4 relative">
         <h1 className="text-7xl font-bold">
           Write <br /> Create Publish
         </h1>
         <p className="text-2xl">Start writing your mind...</p>
-        <Button className="text-2xl" onClick={() => setPopup(true)}>Get started</Button>
+        <Button className="text-2xl cursor-pointer" onClick={() => setPopup(true)}>Get started</Button>
+        <span className="absolute top-40 -right-80"><img src="./heroImg.svg" alt="Hero Img" className="h-200 w-200" /></span>
       </Layout>
 
       {popup && (

@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import { AppContext } from "@/context/AppContext";
 import { toast } from "sonner";
@@ -25,7 +25,7 @@ import { Loader } from "@/components/Loader";
 
 const AuthForm = () => {
   const [signInType, setSignInType] = useState(true);
-  const { isSigned, setIsSigned } = useContext(AppContext);
+  const { isSigned,setIsSigned } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -59,7 +59,7 @@ const AuthForm = () => {
 
       localStorage.setItem("token", token);
       setIsSigned(true);
-
+      console.log(isSigned);
       toast("You are Successfully signed in!", {
         description: "Welcome Back!",
         action: {
@@ -80,6 +80,7 @@ const AuthForm = () => {
     if (signInType) {
       console.log("Sign In:", values);
       signInApi();
+      localStorage.setItem('isSigned', String(isSigned));
     } else {
       console.log("Sign Up:", values);
     }
@@ -89,7 +90,7 @@ const AuthForm = () => {
   };
 
   const renderFormFields = () => {
-    const form = signInType ? signin : signup;
+    // const form = signInType ? signin : signup;
     const fields = signInType
       ? [
           { name: "email", label: "Email", placeholder: "Email..." },
@@ -133,17 +134,20 @@ const AuthForm = () => {
           <span
             className="font-semibold"
             onClick={() => setSignInType(!signInType)}
-            onKeyDown={((e) => {
-              if (e.key === "Enter") {
-                setSignInType(!signInType);
-              }
-            }) as React.KeyboardEventHandler<HTMLSpanElement>}
-             
+            onKeyDown={
+              ((e) => {
+                if (e.key === "Enter") {
+                  setSignInType(!signInType);
+                }
+              }) as React.KeyboardEventHandler<HTMLSpanElement>
+            }
           >
             {signInType ? "Signup Here" : "Signin Here"}
           </span>
         </div>
-        <div className="flex justify-center text-sm font-semibold">{isLoading && <Loader content="Signing in..." />}</div>
+        <div className="flex justify-center text-sm font-semibold">
+          {isLoading && <Loader content="Signing in..." />}
+        </div>
       </form>
     </Form>
   );

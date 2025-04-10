@@ -1,31 +1,35 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Header from "../components/Header";
 import { Layout } from "../components/Layout";
 import axios from "axios";
+import { PostCard } from "@/components/PostCard";
+import { AppContext } from "@/context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 interface Data {
-  title: string,
-  content: string,
-  user: string
+  title: string;
+  content: string;
+  user: string;
+  id: string;
 }
 export const LandingPage = () => {
   const [data, setData] = useState<Data[]>([]);
-  const token = localStorage.getItem('token');
+  const { setPostId } = useContext(AppContext);
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
   const fetchData = async () => {
-    // const res = await fetch('https://backend.hidden-snow-9313.workers.dev/api/v1/blog/bulk', {
-    //   headers: {
-    //     Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg3ZWVlMGI5LTQwZmItNGE1YS05YjU4LWNhNTZmMmY5Yzc3OSJ9.-I-GjyOcY2jVLQBgPwwPWSBgR7tceMZortMTTQ1kDsE"
-    //   }
-    // });
-    const res = await axios.get('https://backend.hidden-snow-9313.workers.dev/api/v1/blog/bulk', {
-      headers: {
-        Authorization: token
+    const res = await axios.get(
+      "https://backend.hidden-snow-9313.workers.dev/api/v1/blog/bulk",
+      {
+        headers: {
+          Authorization: token,
+        },
       }
-    })
+    );
     const data = res.data;
     console.log("Api Response", data);
     return data;
-  }
+  };
   useEffect(() => {
     const fetchDataAndUpdateState = async () => {
       try {
@@ -35,27 +39,33 @@ export const LandingPage = () => {
         console.log("Error while fetching the data", error);
       }
     };
-    
+
     fetchDataAndUpdateState();
-  },[])
+  }, []);
+
+ 
   return (
     <div>
       <Header />
       <Layout>
-        <div className="mt-20 mx-4">
-          {data.map((data, id) => (
-            <div key={id} className="border rounded-md shadow flex flex-col p-2 my-2">
-              <div className="flex items-center gap-2 text-sm">
-                <span className="flex items-center justify-center rounded-full bg-blue-300 px-2">
-                  U
-                </span>
-                {data.user}
-              </div>
-              <h4 className="text-4xl font-bold mt-2">{data.title}</h4>
-              <p className="text-gray-600">{data.content}</p>
-            </div>
-          ))}
-        </div>
+          <div className="mt-20 mx-4">
+            {data.map((data, id) => (
+              <PostCard
+                key={id}
+                data={data}
+                id={id}
+                onClick={() => {
+                  navigate('/update');
+                  setPostId({
+                    id:data.id || null,
+                    title: data.title,
+                    content: data.content
+                  });
+                }}
+              />
+            ))}
+          </div>
+        
       </Layout>
     </div>
   );
