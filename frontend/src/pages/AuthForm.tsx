@@ -48,6 +48,8 @@ const AuthForm = () => {
 
   const signInApi = async () => {
     try {
+      setIsLoading(true);
+
       const payload = signin.getValues();
       console.log(payload, "SigniN Payload");
       const res = await axios.post(
@@ -60,6 +62,7 @@ const AuthForm = () => {
       localStorage.setItem("token", token);
       setIsSigned(true);
       console.log(isSigned);
+      navigate("/");
       toast("You are Successfully signed in!", {
         description: "Welcome Back!",
         action: {
@@ -67,15 +70,13 @@ const AuthForm = () => {
           onClick: () => console.log("Toast Closed"),
         },
       });
-
-      navigate("/");
+      setIsLoading(false);
     } catch (error) {
       console.log("Sign in Error", error);
     }
   };
 
   const onSubmit = (values: SignupType | SigninType) => {
-    setIsLoading(true);
 
     if (signInType) {
       console.log("Sign In:", values);
@@ -84,9 +85,6 @@ const AuthForm = () => {
     } else {
       console.log("Sign Up:", values);
     }
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
   };
 
   const renderFormFields = () => {

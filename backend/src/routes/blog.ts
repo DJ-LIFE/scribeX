@@ -13,6 +13,20 @@ export const blogRouter = new Hono<{
   };
 }>();
 
+blogRouter.get("/all", async(c) => {
+  try {
+    const prisma = getPrisma(c.env.DATABASE_URL);
+    const allPosts = await prisma.post.findMany();
+    return c.json({
+      allPosts,
+    })
+  } catch (error) {
+    console.log(error);
+    c.status(500);
+    return c.json({message: "Internal Server error"});
+  }
+})
+
 blogRouter.use("*", async (c, next) => {
   const authHeader = c.req.header("authorization") || "";
   if (!authHeader) {

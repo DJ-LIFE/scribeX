@@ -5,7 +5,6 @@ import { AppContext } from "@/context/AppContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updatePost, upDatePost } from "@jarvis22719/common-app";
 import axios from "axios";
-import { CirclePlus } from "lucide-react";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +12,6 @@ import { toast } from "sonner";
 
 export const UpdateStory = () => {
   const navigate = useNavigate();
-  const [isClicked, setIsClicked] = useState<string | null>(null);
   const { postId } = useContext(AppContext);
 const { register, handleSubmit, reset } = useForm<upDatePost>({
     resolver: zodResolver(updatePost),
@@ -23,9 +21,7 @@ const { register, handleSubmit, reset } = useForm<upDatePost>({
     },
 });
 
-  const handleInputFocus = (inputId: string) => {
-    setIsClicked(inputId);
-  };
+
   const onSubmit = async (data: upDatePost) => {
     const token = localStorage.getItem("token");
     const payload = { ...data, id: postId?.id };
@@ -72,41 +68,26 @@ const { register, handleSubmit, reset } = useForm<upDatePost>({
       <Layout>
         <form action="" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex items-start md:px-20 lg:px-40 mt-10 py-4">
-          <div className="flex flex-col items-center w-full">
+          <div className="flex flex-col items-center w-full m-4">
             <div className={`flex items-center w-full gap-2`}>
-              <CirclePlus
-                className={`h-10 w-10 cursor-pointer ${
-                  isClicked !== "title" ? "hidden" : "block"
-                }`}
-              />
               <input
                 id="title"
                 type="text"
                 {...register("title", { required: "Title is Required" })}
-                className={`w-full text-5xl pt-5 pl-4 font-serif appearence outline-none ${
-                  isClicked !== "title" ? "ml-12" : "ml-0"
-                }`}
+                className={`w-full text-2xl lg:text-5xl pt-5 pl-4 font-serif appearence outline-none `}
                 placeholder="Title..."
-                onFocus={() => handleInputFocus("title")}
               />
             </div>
-            <div className="flex items-center w-full gap-2">
-              <CirclePlus
-                className={`h-10 w-10 cursor-pointer ${
-                  isClicked !== "story" ? "hidden" : "block"
-                }`}
-              />
+            <div className="flex items-center w-full gap-2 m-2">
+              
               <textarea
                 id="story"
                 {...register("content", { required: "Title is Required" })}
-                className={`w-full text-xl pt-5 pl-4 font-serif appearence outline-none h-40 ${
-                  isClicked !== "story" ? "ml-11" : "ml-0"
-                }`}
+                className={`w-full text-xl p-5  font-serif appearence outline-none h-40  rounded-lg `}
                 placeholder="Tell Your Story..."
-                onFocus={() => handleInputFocus("story")}
               />
             </div>
-            <Button type="submit">Update Story</Button>
+            <Button type="submit" className="mt-10">Update Story</Button>
           </div>
         </div>
         </form>

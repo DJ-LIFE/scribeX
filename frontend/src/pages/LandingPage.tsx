@@ -5,6 +5,7 @@ import axios from "axios";
 import { PostCard } from "@/components/PostCard";
 import { AppContext } from "@/context/AppContext";
 import { useNavigate } from "react-router-dom";
+import PostsSkeleton from "@/components/PostsSkeleton";
 
 interface Data {
   title: string;
@@ -12,12 +13,17 @@ interface Data {
   user: string;
   id: string;
 }
+
 export const LandingPage = () => {
   const [data, setData] = useState<Data[]>([]);
+  const [isloading, setIsLoading] = useState(false);
+  const [searchData, setSearchData] = useState("");
   const { setPostId } = useContext(AppContext);
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const fetchData = async () => {
+    setIsLoading(true);
+
     const res = await axios.get(
       "https://backend.hidden-snow-9313.workers.dev/api/v1/blog/bulk",
       {
@@ -28,7 +34,12 @@ export const LandingPage = () => {
     );
     const data = res.data;
     console.log("Api Response", data);
+    setIsLoading(false);
+        setTimeout(() => {
+          setIsLoading(false);
+    }, 2000);
     return data;
+    
   };
   useEffect(() => {
     const fetchDataAndUpdateState = async () => {
@@ -41,31 +52,47 @@ export const LandingPage = () => {
     };
 
     fetchDataAndUpdateState();
+
   }, []);
 
- 
+  const filteredData = data.filter(
+    (post) =>
+      post.title.toLocaleLowerCase().includes(searchData.toLocaleLowerCase()) ||
+      post.content.toLowerCase().includes(searchData.toLowerCase())
+  );
+
   return (
     <div>
-      <Header />
+      <Header
+        value={searchData}
+        onChange={(e) => setSearchData(e.target.value)}
+      />
       <Layout>
+        {isloading ? (
+          <div className="flex flex-col">
+            <PostsSkeleton />
+            <PostsSkeleton />
+            <PostsSkeleton />
+          </div>
+        ) : (
           <div className="mt-20 mx-4">
-            {data.map((data, id) => (
+            {filteredData.map((data, id) => (
               <PostCard
                 key={id}
                 data={data}
                 id={id}
                 onClick={() => {
-                  navigate('/update');
+                  navigate("/update");
                   setPostId({
-                    id:data.id || null,
+                    id: data.id || null,
                     title: data.title,
-                    content: data.content
+                    content: data.content,
                   });
                 }}
               />
             ))}
           </div>
-        
+        )}
       </Layout>
     </div>
   );

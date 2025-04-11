@@ -20,7 +20,7 @@ const HomePage = () => {
   return (
     <div>
       <Header />
-      <Layout className="space-y-10 py-40 font-serif flex flex-col items-start px-4 relative">
+      <Layout className="space-y-10 py-40 font-serif flex flex-col items-start px-4 relative overflow-hidden">
         <h1 className="text-7xl font-bold">
           Write <br /> Create Publish
         </h1>

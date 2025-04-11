@@ -4,7 +4,12 @@ import { useNavigate } from "react-router";
 import { Button } from "./ui/Button";
 import { AppContext } from "@/context/AppContext";
 
-const Header = () => {
+interface HeaderProps {
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const Header = ({value, onChange}: HeaderProps) => {
   const {isSigned} = useContext(AppContext);
   const navigate = useNavigate();
   if(!isSigned) {
@@ -16,7 +21,7 @@ const Header = () => {
             ScribeX
           </a>
         </div>
-        <div className="flex gap-6 items-center">
+        <div className="flex gap-6 items-center cursor-pointer">
            <Button>Get started</Button>
           <div>
             <Bell className="cursor-pointer" />
@@ -45,6 +50,8 @@ const Header = () => {
                 type="text"
                 className="pl-2 appearance-none "
                 placeholder="search"
+                value={value}
+                onChange={onChange}
               />
             </div>
           </div>
